@@ -17,11 +17,6 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     var audioRecorder: AVAudioRecorder!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "stopRecording" {
             let playSoundsViewController = segue.destination as! PlaySoundsViewController
@@ -63,21 +58,17 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         if flag {
             performSegue(withIdentifier: "stopRecording", sender: recorder.url)
         } else {
-            print("Recording failed")
+            let alert = UIAlertController(title: "Recording failed", message: "Some error occurred when saving the recording. Please, try again!", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
         }
     }
     
     func configureUI(isRecording: Bool) {
         recordButton.isEnabled = !isRecording
         stopRecordingButton.isEnabled = isRecording
-        
-        if isRecording {
-            recordingLabel.text = "Recording in Progress…"
-            recordingLabel.textColor = UIColor.orange
-        } else {
-            recordingLabel.text = "Tap to Record"
-            recordingLabel.textColor = UIColor.black
-        }
+        recordingLabel.text = isRecording ? "Recording in Progress…" : "Tap to Record"
+        recordingLabel.textColor = isRecording ? .orange : .black
     }
 }
 
